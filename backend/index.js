@@ -29,7 +29,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}))
 app.use(cookieParser());
 const corsOptions = {
-    origin : 'https://dihadi-q3e5.onrender.com/',
+    origin : 'https://dihadi-q3e5.onrender.com',
     credentials : true
 }
 
