@@ -30,26 +30,36 @@ export const registerCompany = async (req, res) => {
         })
     } catch (error) {
         console.log(error);
+        return res.status(500).json({
+            message: "Internal server error",
+            success: false
+        });
     }
 }
+
 export const getCompany = async (req, res) => {
     try {
         const userId = req.id; // logged in user id
         const companies = await Company.find({ userId });
-        if (!companies) {
-            return res.status(404).json({
-                message: "Companies not found.",
-                success: false
+        if (!companies || companies.length === 0) {
+            return res.status(200).json({
+                companies: [],
+                success: true
             })
         }
         return res.status(200).json({
             companies,
-            success:true
+            success: true
         })
     } catch (error) {
         console.log(error);
+        return res.status(500).json({
+            message: "Internal server error",
+            success: false
+        });
     }
 }
+
 // get company by id
 export const getCompanyById = async (req, res) => {
     try {
@@ -67,21 +77,24 @@ export const getCompanyById = async (req, res) => {
         })
     } catch (error) {
         console.log(error);
+        return res.status(500).json({
+            message: "Internal server error",
+            success: false
+        });
     }
 }
+
 export const updateCompany = async (req, res) => {
     try {
         const { name, description, website, location } = req.body;
  
-        const file = req.file;
         const updateData = { name, description, website, location };
-        
-        // idhar cloudinary ayega
-        if (file) {
-            const fileUri = getDataUri(file);
+
+        // Only process file if uploaded
+        if (req.file) {
+            const fileUri = getDataUri(req.file);
             const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
-            const logo = cloudResponse.secure_url;
-            updateData.logo = logo;
+            updateData.logo = cloudResponse.secure_url;
         }
 
         const company = await Company.findByIdAndUpdate(req.params.id, updateData, { new: true });
@@ -93,11 +106,16 @@ export const updateCompany = async (req, res) => {
             })
         }
         return res.status(200).json({
-            message:"Company information updated.",
-            success:true
+            message: "Company information updated.",
+            company,
+            success: true
         })
 
     } catch (error) {
         console.log(error);
+        return res.status(500).json({
+            message: "Internal server error",
+            success: false
+        });
     }
 }

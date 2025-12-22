@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import Navbar from '../shared/Navbar'
 import { Label } from '../ui/label'
 import { Input } from '../ui/input'
@@ -33,24 +33,38 @@ const CompanyCreate = () => {
         }
     }
     return (
-        <div>
+        <div className='min-h-screen bg-gray-50'>
             <Navbar />
-            <div className='max-w-4xl mx-auto'>
-                <div className='my-10'>
-                    <h1 className='font-bold text-2xl'>Your Company Name</h1>
-                    <p className='text-gray-500'>What would you like to give your company name? you can change this later.</p>
+            
+            {/* Header */}
+            <div className='bg-gradient-to-r from-blue-600 to-indigo-600 text-white'>
+                <div className='max-w-xl mx-auto px-4 py-12'>
+                    <h1 className='text-3xl md:text-4xl font-bold mb-2'>Create Company</h1>
+                    <p className='text-blue-100'>Enter your company name to get started</p>
                 </div>
+            </div>
 
-                <Label>Company Name</Label>
-                <Input
-                    type="text"
-                    className="my-2"
-                    placeholder="JobHunt, Microsoft etc."
-                    onChange={(e) => setCompanyName(e.target.value)}
-                />
-                <div className='flex items-center gap-2 my-10'>
-                    <Button variant="outline" onClick={() => navigate("/admin/companies")}>Cancel</Button>
-                    <Button onClick={registerNewCompany}>Continue</Button>
+            <div className='max-w-xl mx-auto px-4 py-8 -mt-6'>
+                <div className='bg-white rounded-2xl shadow-xl border border-gray-100 p-8'>
+                    <div className='space-y-4'>
+                        <div className='space-y-2'>
+                            <Label className='text-gray-700'>Company Name</Label>
+                            <Input
+                                type="text"
+                                placeholder="e.g. Google, Microsoft"
+                                onChange={(e) => setCompanyName(e.target.value)}
+                                className='h-12 rounded-xl border-gray-200 focus:border-blue-500'
+                            />
+                        </div>
+                        <div className='flex items-center gap-3 pt-4'>
+                            <Button variant="outline" onClick={() => navigate("/admin/companies")} className='rounded-xl'>
+                                Cancel
+                            </Button>
+                            <Button onClick={registerNewCompany} className='bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded-xl'>
+                                Continue
+                            </Button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

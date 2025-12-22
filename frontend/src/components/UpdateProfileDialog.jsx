@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from './ui/dialog'
 import { Label } from './ui/label'
 import { Input } from './ui/input'
@@ -142,9 +142,20 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
                             </div>
                         </div>
                         <DialogFooter>
-                            {
-                                loading ? <Button className="w-full my-4"> <Loader2 className='mr-2 h-4 w-4 animate-spin' /> Please wait </Button> : <Button type="submit" className="w-full my-4">Update</Button>
-                            }
+                            <Button 
+                                type="submit" 
+                                disabled={loading}
+                                className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+                            >
+                                {loading ? (
+                                    <>
+                                        <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                                        Updating...
+                                    </>
+                                ) : (
+                                    'Update Profile'
+                                )}
+                            </Button>
                         </DialogFooter>
                     </form>
                 </DialogContent>

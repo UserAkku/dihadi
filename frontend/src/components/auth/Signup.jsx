@@ -1,19 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Navbar from '../shared/Navbar'
-import { Label } from '../ui/label'
-import { Input } from '../ui/input'
-import { RadioGroup } from '../ui/radio-group'
-import { Button } from '../ui/button'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { USER_API_END_POINT } from '@/utils/constant'
 import { toast } from 'sonner'
 import { useDispatch, useSelector } from 'react-redux'
 import { setLoading } from '@/redux/authSlice'
-import { Loader2 } from 'lucide-react'
+import { Loader2, Upload } from 'lucide-react'
 
 const Signup = () => {
-
     const [input, setInput] = useState({
         fullname: "",
         email: "",
@@ -22,19 +17,26 @@ const Signup = () => {
         role: "",
         file: ""
     });
-    const {loading,user} = useSelector(store=>store.auth);
+    const { loading, user } = useSelector(store => store.auth);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const changeEventHandler = (e) => {
         setInput({ ...input, [e.target.name]: e.target.value });
     }
+    
     const changeFileHandler = (e) => {
         setInput({ ...input, file: e.target.files?.[0] });
     }
+
+    useEffect(() => {
+        // Reset loading state when component mounts
+        dispatch(setLoading(false));
+    }, [dispatch]);
+
     const submitHandler = async (e) => {
         e.preventDefault();
-        const formData = new FormData();    //formdata object
+        const formData = new FormData();
         formData.append("fullname", input.fullname);
         formData.append("email", input.email);
         formData.append("phoneNumber", input.phoneNumber);
@@ -57,102 +59,134 @@ const Signup = () => {
         } catch (error) {
             console.log(error);
             toast.error(error.response.data.message);
-        } finally{
+        } finally {
             dispatch(setLoading(false));
         }
     }
 
-    useEffect(()=>{
-        if(user){
+    useEffect(() => {
+        if (user) {
             navigate("/");
         }
-    },[])
+    }, [user, navigate])
+
     return (
-        <div>
+        <div className='min-h-screen bg-white'>
             <Navbar />
-            <div className='flex items-center justify-center max-w-7xl mx-auto'>
-                <form onSubmit={submitHandler} className='w-1/2 border border-gray-200 rounded-md p-4 my-10'>
-                    <h1 className='font-bold text-xl mb-5'>Sign Up</h1>
-                    <div className='my-2'>
-                        <Label>Full Name</Label>
-                        <Input
-                            type="text"
-                            value={input.fullname}
-                            name="fullname"
-                            onChange={changeEventHandler}
-                            placeholder="name lokho yeha"
-                        />
+            <div className='flex items-center justify-center px-4 py-8'>
+                <div className='w-full max-w-sm'>
+                    {/* Header */}
+                    <div className='text-center mb-8'>
+                        <h1 className='text-2xl font-semibold text-gray-900'>Create your account</h1>
                     </div>
-                    <div className='my-2'>
-                        <Label>Email</Label>
-                        <Input
-                            type="email"
-                            value={input.email}
-                            name="email"
-                            onChange={changeEventHandler}
-                            placeholder="patel@gmail.com"
-                        />
-                    </div>
-                    <div className='my-2'>
-                        <Label>Phone Number</Label>
-                        <Input
-                            type="text"
-                            value={input.phoneNumber}
-                            name="phoneNumber"
-                            onChange={changeEventHandler}
-                            placeholder="phone number dalo yehaa"
-                        />
-                    </div>
-                    <div className='my-2'>
-                        <Label>Password</Label>
-                        <Input
-                            type="password"
-                            value={input.password}
-                            name="password"
-                            onChange={changeEventHandler}
-                            placeholder="password likh bhainyehaa"
-                        />
-                    </div>
-                    <div className='flex items-center justify-between'>
-                        <RadioGroup className="flex items-center gap-4 my-5">
-                            <div className="flex items-center space-x-2">
-                                <Input
-                                    type="radio"
-                                    name="role"
-                                    value="student"
-                                    checked={input.role === 'student'}
-                                    onChange={changeEventHandler}
-                                    className="cursor-pointer"
-                                />
-                                <Label htmlFor="r1">Student</Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <Input
-                                    type="radio"
-                                    name="role"
-                                    value="recruiter"
-                                    checked={input.role === 'recruiter'}
-                                    onChange={changeEventHandler}
-                                    className="cursor-pointer"
-                                />
-                                <Label htmlFor="r2">Recruiter</Label>
-                            </div>
-                        </RadioGroup>
-                        <div className='flex items-center gap-2'>
-                            <Label>Profile</Label>
-                            <Input
-                                accept="image/*"
-                                type="file"
-                                onChange={changeFileHandler}
-                                className="cursor-pointer"
+
+                    {/* Form */}
+                    <form onSubmit={submitHandler} className='space-y-5'>
+                        <div>
+                            <label className='block text-sm font-medium text-gray-700 mb-2'>Full Name</label>
+                            <input
+                                type="text"
+                                value={input.fullname}
+                                name="fullname"
+                                onChange={changeEventHandler}
+                                placeholder="John Doe"
+                                className='w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-gray-900 placeholder:text-gray-400'
                             />
                         </div>
-                    </div>
-                    {
-                        loading ? <Button className="w-full my-4"> <Loader2 className='mr-2 h-4 w-4 animate-spin' /> Please wait </Button> : <Button type="submit" className="w-full my-4">Signup</Button>
-                    }
-                    <span className='text-sm'>Already have an account? <Link to="/login" className='text-blue-600'>Login</Link></span>
-                </form>
+
+                        <div>
+                            <label className='block text-sm font-medium text-gray-700 mb-2'>Email</label>
+                            <input
+                                type="email"
+                                value={input.email}
+                                name="email"
+                                onChange={changeEventHandler}
+                                placeholder="name@example.com"
+                                className='w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-gray-900 placeholder:text-gray-400'
+                            />
+                        </div>
+
+                        <div>
+                            <label className='block text-sm font-medium text-gray-700 mb-2'>Phone Number</label>
+                            <input
+                                type="tel"
+                                value={input.phoneNumber}
+                                name="phoneNumber"
+                                onChange={changeEventHandler}
+                                placeholder="9876543210"
+                                className='w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-gray-900 placeholder:text-gray-400'
+                            />
+                        </div>
+
+                        <div>
+                            <label className='block text-sm font-medium text-gray-700 mb-2'>Password</label>
+                            <input
+                                type="password"
+                                value={input.password}
+                                name="password"
+                                onChange={changeEventHandler}
+                                placeholder="Create a password"
+                                className='w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-gray-900 placeholder:text-gray-400'
+                            />
+                        </div>
+
+                        <div>
+                            <label className='block text-sm font-medium text-gray-700 mb-3'>I want to</label>
+                            <div className='flex gap-4'>
+                                <button
+                                    type="button"
+                                    onClick={() => setInput({...input, role: 'student'})}
+                                    className={`flex-1 py-3 rounded-lg border-2 font-medium transition-all ${input.role === 'student' ? 'border-blue-600 bg-blue-50 text-blue-600' : 'border-gray-200 text-gray-600 hover:border-gray-300'}`}
+                                >
+                                    Find a Job
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setInput({...input, role: 'recruiter'})}
+                                    className={`flex-1 py-3 rounded-lg border-2 font-medium transition-all ${input.role === 'recruiter' ? 'border-blue-600 bg-blue-50 text-blue-600' : 'border-gray-200 text-gray-600 hover:border-gray-300'}`}
+                                >
+                                    Hire Talent
+                                </button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label className='block text-sm font-medium text-gray-700 mb-2'>
+                                Profile Photo <span className='text-gray-400 font-normal'>(Optional)</span>
+                            </label>
+                            <label className='flex items-center gap-3 px-4 py-3 rounded-lg border border-dashed border-gray-300 hover:border-blue-500 cursor-pointer transition-all'>
+                                <Upload className='h-5 w-5 text-gray-400' />
+                                <span className='text-sm text-gray-500 truncate'>
+                                    {input.file ? input.file.name : 'Click to upload'}
+                                </span>
+                                <input accept="image/*" type="file" onChange={changeFileHandler} className="hidden" />
+                            </label>
+                        </div>
+
+                        <button 
+                            type="submit" 
+                            disabled={loading}
+                            className="w-full py-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            {loading ? (
+                                <span className='flex items-center justify-center gap-2'>
+                                    <Loader2 className='h-4 w-4 animate-spin' />
+                                    Creating account...
+                                </span>
+                            ) : (
+                                'Create Account'
+                            )}
+                        </button>
+                    </form>
+
+                    {/* Footer */}
+                    <p className='mt-8 text-center text-gray-500'>
+                        Already have an account?{' '}
+                        <Link to="/login" className='text-blue-600 font-medium hover:underline'>
+                            Sign in
+                        </Link>
+                    </p>
+                </div>
             </div>
         </div>
     )

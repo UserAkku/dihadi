@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Navbar from '../shared/Navbar'
 import { Button } from '../ui/button'
 import { ArrowLeft, Loader2 } from 'lucide-react'
@@ -75,69 +75,97 @@ const CompanySetup = () => {
     },[singleCompany]);
 
     return (
-        <div>
+        <div className='min-h-screen bg-gray-50'>
             <Navbar />
-            <div className='max-w-xl mx-auto my-10'>
-                <form onSubmit={submitHandler}>
-                    <div className='flex items-center gap-5 p-8'>
-                        <Button onClick={() => navigate("/admin/companies")} variant="outline" className="flex items-center gap-2 text-gray-500 font-semibold">
-                            <ArrowLeft />
-                            <span>Back</span>
+            
+            {/* Header */}
+            <div className='bg-gradient-to-r from-blue-600 to-indigo-600 text-white'>
+                <div className='max-w-2xl mx-auto px-4 py-12'>
+                    <div className='flex items-center gap-4'>
+                        <Button onClick={() => navigate("/admin/companies")} variant="outline" size="icon" className="rounded-xl bg-white/10 border-white/20 hover:bg-white/20 text-white">
+                            <ArrowLeft className='h-4 w-4' />
                         </Button>
-                        <h1 className='font-bold text-xl'>Company Setup</h1>
-                    </div>
-                    <div className='grid grid-cols-2 gap-4'>
                         <div>
-                            <Label>Company Name</Label>
+                            <h1 className='text-3xl font-bold'>Company Setup</h1>
+                            <p className='text-blue-100 mt-1'>Update your company details</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div className='max-w-2xl mx-auto px-4 py-8 -mt-6'>
+                <form onSubmit={submitHandler} className='bg-white rounded-2xl shadow-xl border border-gray-100 p-8 space-y-6'>
+                    <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                        <div className='space-y-2'>
+                            <Label className='text-gray-700'>Company Name</Label>
                             <Input
                                 type="text"
                                 name="name"
                                 value={input.name}
                                 onChange={changeEventHandler}
+                                className='h-11 rounded-lg border-gray-300'
                             />
                         </div>
-                        <div>
-                            <Label>Description</Label>
-                            <Input
-                                type="text"
-                                name="description"
-                                value={input.description}
-                                onChange={changeEventHandler}
-                            />
-                        </div>
-                        <div>
-                            <Label>Website</Label>
-                            <Input
-                                type="text"
-                                name="website"
-                                value={input.website}
-                                onChange={changeEventHandler}
-                            />
-                        </div>
-                        <div>
-                            <Label>Location</Label>
+                        <div className='space-y-2'>
+                            <Label className='text-gray-700'>Location</Label>
                             <Input
                                 type="text"
                                 name="location"
                                 value={input.location}
                                 onChange={changeEventHandler}
-                            />
-                        </div>
-                        <div>
-                            <Label>Logo</Label>
-                            <Input
-                                type="file"
-                                accept="image/*"
-                                onChange={changeFileHandler}
+                                className='h-11 rounded-lg border-gray-300'
                             />
                         </div>
                     </div>
-                    {
-                        loading ? <Button className="w-full my-4"> <Loader2 className='mr-2 h-4 w-4 animate-spin' /> Please wait </Button> : <Button type="submit" className="w-full my-4">Update</Button>
-                    }
+                    
+                    <div className='space-y-2'>
+                        <Label className='text-gray-700'>Description</Label>
+                        <Input
+                            type="text"
+                            name="description"
+                            value={input.description}
+                            onChange={changeEventHandler}
+                            className='h-11 rounded-lg border-gray-300'
+                        />
+                    </div>
+                    
+                    <div className='space-y-2'>
+                        <Label className='text-gray-700'>Website</Label>
+                        <Input
+                            type="text"
+                            name="website"
+                            value={input.website}
+                            onChange={changeEventHandler}
+                            className='h-11 rounded-lg border-gray-300'
+                        />
+                    </div>
+                    
+                    <div className='space-y-2'>
+                        <Label className='text-gray-700'>Logo</Label>
+                        <Input
+                            type="file"
+                            accept="image/*"
+                            onChange={changeFileHandler}
+                            className='rounded-lg border-gray-300'
+                        />
+                    </div>
+                    
+                    <Button 
+                        type="submit" 
+                        disabled={loading}
+                        className="w-full h-11 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded-xl"
+                    >
+                        {loading ? (
+                            <>
+                                <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                                Updating...
+                            </>
+                        ) : (
+                            'Update Company'
+                        )}
+                    </Button>
                 </form>
             </div>
-
         </div>
     )
 }
